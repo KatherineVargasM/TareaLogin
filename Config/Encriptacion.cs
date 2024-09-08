@@ -10,8 +10,8 @@ namespace Login.Config
 {
     class Encriptacion
     {
-                                             //contraaenia         Este es el codigo
-        public static string Encripta(string textoaencriptar, string codigosecreto) {
+        public static string Encripta(string textoaencriptar, string codigosecreto)
+        {
             byte[] dto = new byte[16];
             byte[] array;
             using (Aes aes = Aes.Create())
@@ -19,12 +19,15 @@ namespace Login.Config
                 aes.Key = Encoding.UTF8.GetBytes(codigosecreto);
                 aes.IV = dto;
                 ICryptoTransform cryptoTransform = aes.CreateEncryptor(aes.Key, aes.IV);
-                using (MemoryStream memoryStream = new MemoryStream()) {
-                    using (CryptoStream cryptoStream = new CryptoStream((Stream)memoryStream, cryptoTransform, CryptoStreamMode.Write)) {
-                        using (StreamWriter streamWriter = new StreamWriter((Stream)cryptoStream)) {
+                using (MemoryStream memoryStream = new MemoryStream())
+                {
+                    using (CryptoStream cryptoStream = new CryptoStream((Stream)memoryStream, cryptoTransform, CryptoStreamMode.Write))
+                    {
+                        using (StreamWriter streamWriter = new StreamWriter((Stream)cryptoStream))
+                        {
                             streamWriter.Write(textoaencriptar);
                         }
-                        array = memoryStream.ToArray();                     
+                        array = memoryStream.ToArray();
                     }
                 }
             }
@@ -44,55 +47,32 @@ namespace Login.Config
                 {
                     using (CryptoStream cryptoStream = new CryptoStream((Stream)memoryStream, decryptoTransform, CryptoStreamMode.Read))
                     {
-                        using (StreamReader streamReader = new StreamReader((Stream) cryptoStream))
+                        using (StreamReader streamReader = new StreamReader((Stream)cryptoStream))
                         {
                             return streamReader.ReadToEnd();
                         }
                     }
                 }
             }
-            
+
         }
 
-        public static string MD5Encripter(string texto) {
+        public static string MD5Encripter(string texto)
+        {
 
-            using (MD5 md5 = MD5.Create()) {
+            using (MD5 md5 = MD5.Create())
+            {
                 byte[] entrada = Encoding.UTF8.GetBytes(texto);
                 byte[] hashbytes = md5.ComputeHash(entrada);
 
                 StringBuilder stringBuilder = new StringBuilder();
-                
+
                 for (int i = 0; i < hashbytes.Length; i++)
                 {
                     stringBuilder.Append(hashbytes[i].ToString("X2"));
                 }
                 return stringBuilder.ToString();
-                //"1111"
-                //X2  => "05"
-
-                //123
-                //dfkljbgs;lfherh5614y56hj4e5t4r
-                /*
-                 * select * from ususario where usuarios = '' or 1=1 --
-                 * 
-                 * 
-                 * 
-                 IdUsurio   nombre_usuairo  passowrd                    rol
-                    1           guardia       kjshgdkgjtr2515748        Guardia
-                 
-
-                form => 123
-                  if (metodoecnptacion(123) === salebasedatos){
-                
-                return usuario;
-                }
-
-
-
-                 */
-
             }
-
         }
     }
 }

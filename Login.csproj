@@ -50,7 +50,6 @@
     <Compile Include="Config\conexion.cs" />
     <Compile Include="Config\ControlErrores.cs" />
     <Compile Include="Config\Encriptacion.cs" />
-    <Compile Include="Controllers\CiudadesController.cs" />
     <Compile Include="Controllers\UsuariosController.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
@@ -58,7 +57,6 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Models\CiudadesModel.cs" />
     <Compile Include="Models\UsuariosModel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -124,6 +122,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Usuarios\frm_Usuarios.resx">
       <DependentUpon>frm_Usuarios.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Usuarios\frm_Usuarios_Contrsenia.resx">
+      <DependentUpon>frm_Usuarios_Contrsenia.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

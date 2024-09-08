@@ -19,8 +19,12 @@ namespace Login.Views.Financiero
 
         private void frm_Financiero_Principal_Load(object sender, EventArgs e)
         {
-            MessageBox.Show(ConfiguracionProyecto.usuario);
 
+        }
+
+        private void btn_Regresar_Click_1(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

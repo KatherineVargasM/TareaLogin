@@ -20,7 +20,7 @@ namespace Login.Views.Usuarios
         SerialPort _arduino;
 
         UsuariosController _usuariosController = new UsuariosController();
-        UsuariosModel usuariosModel = new UsuariosModel();
+
         int id = 0;
 
         public frm_Usuarios()
@@ -30,9 +30,8 @@ namespace Login.Views.Usuarios
              _arduino.PortName = "COM4";
              _arduino.BaudRate = 9600;
              _arduino.Open();*/
-
-
         }
+
 
         private void frm_Usuarios_Load(object sender, EventArgs e)
         {
@@ -41,113 +40,182 @@ namespace Login.Views.Usuarios
 
         }
 
-        private void cargalista() {
+        private void cargalista()
+        {
 
             var listausuarios = _usuariosController.ObtenerTodosLosUsuarios();
             lst_usuarios.DataSource = null;
             lst_usuarios.DataSource = listausuarios;
             lst_usuarios.DisplayMember = "NombreUsuario";
             lst_usuarios.ValueMember = "ID";
-
-
-
         }
 
         private void frm_Usuarios_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (_arduino.IsOpen) {
-                _arduino.Close();
-            }
+            /*if (_arduino.IsOpen) {
+                _arduino.Close();}*/
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             //_arduino.Write("E");
-
             // txt_nombre.Text = _arduino.Read().ToString();
-
-
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            _arduino.Write("F");
+            //_arduino.Write("F");
         }
 
-        private void btn_guardar_Click(object sender, EventArgs e)
+        private void limpiarCampos()
         {
-            
-            if (comprobar())
-            {
-                var resultado = new UsuariosModel();
-                var res = "";
-                /*UsuariosModel usuario = new UsuariosModel();
-                usuario.NombreUsuario = txt_nombre.Text.Trim();
-                usuario.Password = txt_contrasenia.Text.Trim();
-                usuario.Roles = cmb_roles.SelectedItem.ToString();*/
-
-                var usuario = new UsuariosModel {
-                ID = this.id,
-                NombreUsuario = txt_nombre.Text.Trim().ToString(),
-                Password = txt_contrasenia.Text.Trim().ToString(),
-                Roles = cmb_roles.SelectedText
-                };
-                MessageBox.Show(cmb_roles.SelectedItem.ToString());
-                if (this.id != 0)
-                {
-                    //resultado = _usuariosController.ActualizarUsuario(usuario);
-                   res = UsuariosModel.Actualizar(usuario);
-                }
-                else {
-                    resultado = _usuariosController.InsertarUsuario(usuario);
-                    _ = resultado.ID > 0 ? res = "ok" : "eror";
-                }
-                if (res == "OK") {
-                   MessageBox.Show("Se guardo con exito");
-                    cargalista();
-                    txt_contrasenia.Text = "";
-                    txt_nombre.Text = "";
-                    txt_repita.Text = "";
-                    cmb_roles.SelectedIndex = 0;
-                }
-                else
-                {
-                    MessageBox.Show("Ocurrio un error al guardar, intentelo mas tarde");
-                }
-
-            }
+            txt_nombre.Text = "";
+            txt_contrasenia.Text = "";
+            txt_repita.Text = "";
+            cmb_roles.SelectedIndex = 0;
+            id = 0;
         }
 
-        public bool comprobar() {
-
-            //txt_nombre.Text.Trim() == "" ? MessageBox.Show("Ingrese el nombres") : "" 
+        public bool comprobar()
+        {
             if (txt_nombre.Text.Trim() == "")
             {
-                MessageBox.Show("Ingrese el nombre del usuario");
+                MessageBox.Show("Ingrese el nombre del usuario.");
                 return false;
             }
             else if (txt_contrasenia.Text.Trim() == "")
             {
-                MessageBox.Show("Ingrese la contrasenia");
+                MessageBox.Show("Ingrese la contraseña.");
                 return false;
             }
             else if (txt_repita.Text.Trim() == "")
             {
-                MessageBox.Show("Ingrese la contrasenia");
+                MessageBox.Show("Repita la contraseña.");
                 return false;
             }
             else if (cmb_roles.SelectedIndex == -1 || cmb_roles.SelectedIndex == 0)
             {
-                MessageBox.Show("Seleccion un item de la lista de roles");
+                MessageBox.Show("Seleccione un rol.");
                 return false;
             }
-            else {
+            else if (txt_contrasenia.Text.Trim() != txt_repita.Text.Trim())
+            {
+                MessageBox.Show("Las contraseñas no coinciden.");
+                return false;
+            }
+            else
+            {
                 return true;
             }
 
         }
 
-        private void lst_usuarios_MouseDoubleClick(object sender, MouseEventArgs e)
+        private void btn_guardar_Click(object sender, EventArgs e)
+        {
+            if (comprobar())
+            {
+                var resultado = new UsuariosModel();
+                var res = "";
+                var usuario = new UsuariosModel
+                {
+                    ID = this.id,
+                    NombreUsuario = txt_nombre.Text.Trim().ToString(),
+                    Password = txt_contrasenia.Text.Trim().ToString(),
+                    Roles = cmb_roles.SelectedItem.ToString()
+                };
+
+                if (this.id != 0)
+                {
+                    res = _usuariosController.ActualizarUsuario(usuario);
+                }
+                else
+                {
+                    resultado = _usuariosController.InsertarUsuario(usuario);
+                    res = resultado.ID > 0 ? "OK" : "Error";
+                }
+
+                if (res == "OK")
+                {
+                    MessageBox.Show("Operación realizada con éxito.");
+                    cargalista();
+                    limpiarCampos();
+                }
+                else
+                {
+                    MessageBox.Show("Ocurrió un error al guardar.");
+                }
+
+            }
+        }
+
+        private void btn_cancelar_Click_1(object sender, EventArgs e)
+        {
+            limpiarCampos();
+        }
+
+        private void btn_Modificar_Click(object sender, EventArgs e)
+        {
+            if (lst_usuarios.SelectedValue != null)
+            {
+                if (comprobar())
+                {
+                    var usuario = new UsuariosModel
+                    {
+                        ID = this.id,
+                        NombreUsuario = txt_nombre.Text.Trim(),
+                        Password = txt_contrasenia.Text.Trim(),
+                        Roles = cmb_roles.SelectedItem.ToString()
+                    };
+
+                    var resultado = _usuariosController.ActualizarUsuario(usuario);
+                    if (resultado == "OK")
+                    {
+                        MessageBox.Show("Usuario modificado con éxito.");
+                        cargalista();
+                        limpiarCampos();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Ocurrió un error al modificar el usuario");
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("Seleccione un usuario de la lista para modificar.");
+            }
+        }
+
+        private void btn_Eliminar_Click(object sender, EventArgs e)
+        {
+            if (lst_usuarios.SelectedValue != null)
+            {
+                var result = MessageBox.Show("¿Está seguro de que desea eliminar este usuario?", "Confirmar eliminación", MessageBoxButtons.YesNo);
+
+                if (result == DialogResult.Yes)
+                {
+                    var usuarioId = (int)lst_usuarios.SelectedValue;
+                    var res = _usuariosController.EliminarUsuario(usuarioId);
+
+                    if (res == "OK")
+                    {
+                        MessageBox.Show("Usuario eliminado con éxito.");
+                        cargalista();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Ocurrió un error al eliminar, inténtelo más tarde.");
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("Seleccione un usuario para eliminar.");
+            }
+
+        }
+
+        private void lst_usuarios_DoubleClick(object sender, EventArgs e)
         {
             if (lst_usuarios.SelectedValue != null)
             {
@@ -156,17 +224,13 @@ namespace Login.Views.Usuarios
                 txt_nombre.Text = usuario.NombreUsuario;
                 txt_contrasenia.Text = usuario.Password;
                 txt_repita.Text = usuario.Password;
-                if (usuario.Roles == "Admin") cmb_roles.SelectedIndex = 1;
-                if (usuario.Roles == "Guardia") cmb_roles.SelectedIndex = 2;
-                if (usuario.Roles == "Financiero") cmb_roles.SelectedIndex = 3;
-                if (usuario.Roles == "Bodega") cmb_roles.SelectedIndex = 4;
-                
+                cmb_roles.SelectedItem = usuario.Roles;
+            }
+            else
+            {
+                MessageBox.Show("Seleccione un usuario de la lista para modificar.");
+            }
 
-                
-            }
-            else {
-                ErrorHandler.ManejarErrorGeneral(null, "Seleccione un usuario de la lista");
-            }
         }
     }
 }

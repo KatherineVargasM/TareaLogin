@@ -21,5 +21,10 @@ namespace Login.Views.Acesos
         {
 
         }
+
+        private void btn_Regresar_Click_1(object sender, EventArgs e)
+        {
+            this.Close();
+        }
     }
 }

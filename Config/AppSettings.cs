@@ -9,23 +9,29 @@ namespace Login.Config
     class AppSettings
     {
         private static AppSettings _instancia;
-        public string usuario{ get; set; }
+        public string usuario { get; set; }
         public string Rol { get; set; }
         public int idusuario { get; set; }
         public string AppName { get; set; }
-        private AppSettings() {
+
+
+        private AppSettings()
+        {
             AppName = "Accesos Casari";
         }
 
-        public static AppSettings Instancia {
+        public static AppSettings Instancia
+        {
 
-            get {
-                if (_instancia == null) {
+            get
+            {
+                if (_instancia == null)
+                {
                     _instancia = new AppSettings();
                 }
                 return _instancia;
             }
-        
+
         }
     }
 }
